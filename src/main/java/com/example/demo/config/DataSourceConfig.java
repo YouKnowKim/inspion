@@ -18,17 +18,17 @@ public class DataSourceConfig {
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
         
-        // 1. 드라이버 클래스 변경 (PostgreSQL)
+        // 1. 드라이버 클래스
         config.setDriverClassName("org.postgresql.Driver");
         
-        // 2. JDBC URL 변경 (Supabase 호스트, 포트, DB명 적용)
+        // 2. JDBC URL (Supabase 호스트, 포트, DB명 적용)
         config.setJdbcUrl("jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres");
         
-        // 3. 계정 정보 변경
+        // 3. 계정 정보
         config.setUsername("postgres.mswxzgweyfmipwtckdxh");
-        config.setPassword("Rladbsgh12!@"); // 실제 Supabase 비밀번호를 입력하세요.
+        config.setPassword("Rladbsgh12!@");  
 
-        // (선택사항) Supabase는 원격 연결이므로 연결 유지 설정을 추가하면 좋습니다.
+        // Supabase는 원격 연결이므로 연결 유지 설정 추가
         config.addDataSourceProperty("tcpKeepAlive", "true");
         
         return new HikariDataSource(config);

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.demo.mapper.TaskMapper">
+
+	<select id="selectMaxOrderId" resultType="string">
+	    SELECT max(order_id) FROM public.order_tb 
+	    WHERE applicant_key = #{applicant_key}
+	</select>
+
+    <insert id="insertOrder" parameterType="OrderDao">
+    	INSERT INTO public.order_tb (
+    		order_id
+    		, applicant_key
+    		, user_id
+    		, item_id
+    		, "name"
+    		, address
+    		, item_name
+    		, price
+    		, status
+    	) VALUES (
+	    	#{order_id}
+	    	, #{applicant_key}
+	    	, #{user_id}
+	    	, #{item_id}
+	    	, #{name}
+	    	, #{address}
+	    	, #{item_name}
+	    	, #{price}
+	    	, #{status})
+	</insert>
+
+</mapper>

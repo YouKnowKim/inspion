@@ -30,6 +30,9 @@ dependencies {
 	// MyBatis: Spring Boot 2.x와 호환되는 2.3.x 버전 유지
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.2'
 	
+	// XML 데이터를 객체로 변환(역직렬화)하기 위한 핵심 라이브러리
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+	
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
