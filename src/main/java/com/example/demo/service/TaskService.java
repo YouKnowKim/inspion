@@ -24,7 +24,7 @@ public class TaskService {
 	
 	// 지원자 키
     private static final String APPLICANT_KEY = "KIMYUNHO";
-    private static final String PARTICIPANT_NAME = "김윤호"; // 본인 성함으로 수정
+    private static final String PARTICIPANT_NAME = "김윤호";
 
     /**
      * 주문 저장 및 파일 생성
@@ -53,7 +53,7 @@ public class TaskService {
             createdFile = createTxtFile(orderDaoList);
 
             // 테스트용: 강제 에러 발생시키려면 아래 주석 해제 (DB와 파일 모두 생성 안됨)
-            // if(true) throw new RuntimeException("트랜잭션 테스트");
+             if(true) throw new RuntimeException("트랜잭션 테스트");
 
         } catch (Exception e) {
             // 파일이 생성된 도중에 오류가 났다면 생성된 파일 삭제 (파일 롤백)

@@ -19,6 +19,7 @@ import com.example.demo.dao.HeaderDao;
 import com.example.demo.dao.ItemDao;
 import com.example.demo.dao.OrderDao;
 import com.example.demo.dao.OriginOrderDao;
+import com.example.demo.service.MonitoringLogService;
 import com.example.demo.service.TaskService;
 
 @RestController
@@ -27,6 +28,9 @@ public class MainController {
 
 	@Autowired
 	TaskService taskService;
+
+	@Autowired
+    MonitoringLogService logService;
 
 	@PostMapping(value = "/saveOrder", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> saveOrder(@RequestBody OriginOrderDao orderRequest) {
@@ -68,11 +72,18 @@ public class MainController {
 			response.put("result", "SUCCESS");
 			response.put("message", "주문 저장 및 파일 생성이 완료되었습니다.");
 			response.put("count", finalOrderList.size());
+			
+			// 성공 로그 기록
+            logService.writeLog("API_SAVE_ORDER", "SUCCESS", "주문 건수: " + finalOrderList.size());
 
 		} catch (Exception e) {
 			// 4. 실패 시(예외 발생 시) JSON 응답 구성
 			response.put("result", "FAIL");
 			response.put("message", "오류 발생: " + e.getMessage());
+			
+			// 실패 로그 기록
+            logService.writeLog("API_SAVE_ORDER", "FAIL", "에러: " + e.getMessage());
+            
 			// 로그 출력
 			e.printStackTrace();
 		}

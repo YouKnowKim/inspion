@@ -5,6 +5,51 @@
   
 <mapper namespace="com.example.demo.mapper.TaskMapper">
 
+	<select id="selectMaxShipmentId" resultType="string">
+	    SELECT MAX(shipment_id) FROM public.shipment_tb WHERE applicant_key = #{applicantKey}
+	</select>
+
+	<select id="selectNewOrders" resultType="OrderDao">
+	    SELECT
+	        order_id
+	        , applicant_key
+	        , user_id
+	        , item_id
+	        , "name"
+	        , address
+	        , item_name
+	        , price
+	        , status
+	    FROM
+	        public.order_tb
+	    WHERE
+	        status = 'N'
+	    ORDER BY order_id ASC
+	</select>
+
+	<insert id="insertShipment" parameterType="OrderDao">
+	    INSERT INTO public.shipment_tb (
+	        shipment_id, 
+	        applicant_key, 
+	        order_id, 
+	        item_id, 
+	        address
+	    ) VALUES (
+	        #{shipment_id},
+	        #{applicant_key},
+	        #{order_id},
+	        #{item_id},
+	        #{address}
+	    )
+	</insert>
+	
+	<update id="updateOrderStatus" parameterType="OrderDao">
+	    UPDATE public.order_tb 
+	    SET status = 'Y' 
+	    WHERE order_id = #{order_id} 
+	      AND applicant_key = #{applicant_key}
+	</update>
+
 	<select id="selectMaxOrderId" resultType="string">
 	    SELECT max(order_id) FROM public.order_tb 
 	    WHERE applicant_key = #{applicant_key}

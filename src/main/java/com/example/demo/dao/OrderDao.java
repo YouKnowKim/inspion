@@ -7,13 +7,14 @@ import lombok.Data;
 @Data
 public class OrderDao {
 	
-	String order_id;
-	String applicant_key;
-	String user_id;
-	String item_id;
-	String name;
-	String address;
-	String item_name;
-	BigDecimal price;
-	String status;
+	private String shipment_id;
+	private String order_id;
+	private String applicant_key;
+	private String user_id;
+	private String item_id;
+	private String name;
+	private String address;
+	private String item_name;
+	private BigDecimal price;
+	private String status;
 }

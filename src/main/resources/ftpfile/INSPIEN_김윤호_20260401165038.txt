@@ -1,0 +1,2 @@
+A007^USER1^ITEM1^KIMYUNHO^홍길동^서울특별시 금천구^청바지^21000
+A008^USER2^ITEM2^KIMYUNHO^유관순^서울특별시 구로구^티셔츠^15800
