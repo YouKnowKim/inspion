@@ -32,6 +32,9 @@ dependencies {
 	
 	// XML 데이터를 객체로 변환(역직렬화)하기 위한 핵심 라이브러리
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+    
+    // FTP 의존성 추가
+    implementation 'commons-net:commons-net:3.9.0'
 	
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'

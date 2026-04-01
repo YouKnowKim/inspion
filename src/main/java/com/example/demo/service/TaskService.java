@@ -2,13 +2,18 @@ package com.example.demo.service;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,9 +56,12 @@ public class TaskService {
 
             // 3. 모든 데이터가 DB에 정상 세팅된 후 텍스트 파일 생성
             createdFile = createTxtFile(orderDaoList);
+            
+            // 4. 생성된 파일을 로컬 FTP 서버로 전송 (추가)
+            uploadToLocalFtp(createdFile);
 
             // 테스트용: 강제 에러 발생시키려면 아래 주석 해제 (DB와 파일 모두 생성 안됨)
-             if(true) throw new RuntimeException("트랜잭션 테스트");
+//             if(true) throw new RuntimeException("트랜잭션 테스트");
 
         } catch (Exception e) {
             // 파일이 생성된 도중에 오류가 났다면 생성된 파일 삭제 (파일 롤백)
@@ -106,6 +114,51 @@ public class TaskService {
         }
 
         return file;
+    }
+    
+    /**
+     * FTP 전송 로직 (예외 발생 시 상위로 던지도록 수정)
+     */
+    public void uploadToLocalFtp(File file) throws Exception {
+        FTPClient ftpClient = new FTPClient();
+        try {
+        	
+        	// 한글 파일명을 위한 인코딩 설정 (연결 전 혹은 로그인 전)
+            ftpClient.setControlEncoding("UTF-8");
+            
+            ftpClient.connect("127.0.0.1", 21);
+            boolean loginSuccess = ftpClient.login("Yunho_FTP", "rladbsgh1"); 
+            
+            if (!loginSuccess) throw new Exception("FTP 로그인 실패!");
+            
+            // 서버에 UTF-8 사용을 알림 (명령어 전송)
+            ftpClient.sendCommand("OPTS UTF8 ON");
+            
+            // 수동 모드 설정 (로컬/방화벽 환경에서 전송 성공률을 높임)
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
+            try (InputStream input = new FileInputStream(file)) {
+                // FTP 서버에 파일 저장
+                boolean isStored = ftpClient.storeFile(file.getName(), input);
+                
+                if (!isStored) {
+                    throw new Exception("FTP 서버에 파일을 저장하는 데 실패했습니다.");
+                }
+            }
+            
+            ftpClient.logout();
+        } catch (IOException ex) {
+            throw new Exception("FTP 접속 중 오류 발생: " + ex.getMessage());
+        } finally {
+            if (ftpClient.isConnected()) {
+                try {
+                    ftpClient.disconnect();
+                } catch (IOException e) {
+                    // 무시
+                }
+            }
+        }
     }
 	
 
